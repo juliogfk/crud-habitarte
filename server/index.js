@@ -13,7 +13,7 @@ const db = mysql.createPool({
 app.use(cors());
 app.use(express.json());
 
-app.post('/register', (req, res)=>{
+app.post('/register', async (req, res)=>{
     const {nome} = req.body;
     const {sobrenome} = req.body;
     const {email} = req.body;
@@ -23,9 +23,13 @@ app.post('/register', (req, res)=>{
     const {nicho} = req.body;
 
     let SQL = "INSERT INTO usuarios2 (nome, sobrenome, email, estado, cidade, telefone, nicho) VALUES (?,?,?,?,?,?,?)";
-    db.query(SQL, [nome, sobrenome, email, estado, cidade, telefone, nicho], (err, result) => {
-        console.log(err);
+    try{
+    await db.query(SQL, [nome, sobrenome, email, estado, cidade, telefone, nicho], (err, result) => {
+        res.send(200)
     });
+    }catch (er) {
+        res.send(500)
+    }
 });
 
 app.get("/getUsuarios", (req, res) => {
