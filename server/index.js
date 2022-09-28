@@ -13,46 +13,37 @@ const db = mysql.createPool({
 app.use(cors());
 app.use(express.json());
 
-
-app.post('/register', (req, res)=>{
-    const {nome} = req.body;
-    const {sobrenome} = req.body;
-    const {email} = req.body;
-    const {estado} = req.body;
-    const {cidade} = req.body;
-    const {telefone} = req.body;
-    const {nicho} = req.body;
+app.post('/register', async (req, res)=>{
+    const {nome, sobrenome, email, estado, cidade, telefone, nicho} = req.body;
 
     let SQL = "INSERT INTO usuarios2 (nome, sobrenome, email, estado, cidade, telefone, nicho) VALUES (?,?,?,?,?,?,?)";
-    db.query(SQL, [nome, sobrenome, email, estado, cidade, telefone, nicho], (err, result) => {
-        console.log(err);
+    try{
+    await db.query(SQL, [nome, sobrenome, email, estado, cidade, telefone, nicho], (err, result) => {
+        res.status(200).send("usuario adicionado com sucesso")
     });
+    }catch (err) {
+       res.status(500).send(err)
+    }
 });
 
-app.get("/getUsuarios", (req, res) => {
+app.get("/getUsuarios",async (req, res) => {
     let SQL = "SELECT * from usuarios2";
     
-    db.query(SQL, (err, result) => {
-        if(err) console.log(err);
-        else res.send(result);
+   await db.query(SQL, (err, result) => {
+        if(err) res.status(500).send("erro ao recuperar os usuarios");
+        
+        res.status(200).send(result);
     });
 });
 
-app.put("/edit", (req, res) => {
-    const {id} = req.body;
-    const {nome} = req.body;
-    const {sobrenome} = req.body;
-    const {email} = req.body;
-    const {estado} = req.body;
-    const {cidade} = req.body;
-    const {telefone} = req.body;
-    const {nicho} = req.body;
-
+app.put("/edit", async (req, res) => {
+    const {id,nome,sobrenome,email,estado,cidade,telefone,nicho} = req.body;
+    
     let SQL = "UPDATE usuarios2 SET nome = ?, sobrenome = ?, email = ?, estado = ?, cidade = ?, telefone = ?, nicho = ? WHERE id = ? ";
 
-    db.query(SQL,[nome, sobrenome, email, estado, cidade, telefone, nicho, id], (err, result) => {
-        if(err) console.log(err);
-        else res.send(result);
+    await db.query(SQL,[nome, sobrenome, email, estado, cidade, telefone, nicho, id], (err, result) => {
+        if(err) res.status(500).send("usuario não localizado");
+        res.send(result);
     });
 });
 
