@@ -25,6 +25,7 @@ app.get("/getUsuarios", async (req, res) => {
     let SQL = "SELECT * from usuarios2";
     
    await db.query(SQL, (err, result) => {
+        
         if(err) res.status(500).send("erro ao recuperar os usuarios");
         
         res.status(200).send(result);
@@ -37,7 +38,20 @@ app.put("/edit", async (req, res) => {
     let SQL = "UPDATE usuarios2 SET nome = ?, sobrenome = ?, email = ?, estado = ?, cidade = ?, telefone = ?, nicho = ? WHERE id = ? ";
 
     await db.query(SQL,[nome, sobrenome, email, estado, cidade, telefone, nicho, id], (err, result) => {
+        
         if(err) res.status(500).send("usuario não localizado");
+        
+        res.send(result);
+    });
+});
+
+app.delete("/delete/:id", async (req, res) => {
+    const {id} = req.params;
+    let SQL = "DELETE FROM usuarios2 WHERE id = ?";
+    await db.query(SQL, id, (err, result) => {
+        
+        if(err) res.status(500).send("usuario não localizado");
+        
         res.send(result);
     });
 });
