@@ -3,12 +3,7 @@ const app = express();
 const mysql = require("mysql");
 const cors = require('cors');
 
-const db = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "admin",
-    database: "habitarte2",
-});
+import db from "./database/configDatabase";
 
 app.use(cors());
 app.use(express.json());
@@ -26,7 +21,7 @@ app.post('/register', async (req, res)=>{
     }
 });
 
-app.get("/getUsuarios",async (req, res) => {
+app.get("/getUsuarios", async (req, res) => {
     let SQL = "SELECT * from usuarios2";
     
    await db.query(SQL, (err, result) => {
