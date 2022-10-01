@@ -1,9 +1,8 @@
 const express = require("express");
 const app = express();
-const mysql = require("mysql");
 const cors = require('cors');
 
-import db from "./database/configDatabase";
+const db = require("./database/configDatabase");
 
 app.use(cors());
 app.use(express.json());
@@ -11,10 +10,10 @@ app.use(express.json());
 app.post('/register', async (req, res)=>{
     const {nome, sobrenome, email, estado, cidade, telefone, nicho} = req.body;
 
-    let SQL = "INSERT INTO usuarios2 (nome, sobrenome, email, estado, cidade, telefone, nicho) VALUES (?,?,?,?,?,?,?)";
+    const SQL = "INSERT INTO usuarios2 (nome, sobrenome, email, estado, cidade, telefone, nicho) VALUES (?,?,?,?,?,?,?)";
     try{
     await db.query(SQL, [nome, sobrenome, email, estado, cidade, telefone, nicho], (err, result) => {
-        res.status(200).send("usuario adicionado com sucesso")
+        res.status(200).send("usuário adicionado com sucesso")
     });
     }catch (err) {
        res.status(500).send(err)
@@ -22,35 +21,35 @@ app.post('/register', async (req, res)=>{
 });
 
 app.get("/getUsuarios", async (req, res) => {
-    let SQL = "SELECT * from usuarios2";
+    const SQL = "SELECT * from usuarios2";
     
    await db.query(SQL, (err, result) => {
         
-        if(err) res.status(500).send("erro ao recuperar os usuarios");
+        if(err) res.status(500).send("erro ao recuperar os usuários");
         
         res.status(200).send(result);
     });
 });
 
 app.put("/edit", async (req, res) => {
-    const {id,nome,sobrenome,email,estado,cidade,telefone,nicho} = req.body;
+    const {nome,sobrenome,email,estado,cidade,telefone,nicho, id_usuario} = req.body;
     
-    let SQL = "UPDATE usuarios2 SET nome = ?, sobrenome = ?, email = ?, estado = ?, cidade = ?, telefone = ?, nicho = ? WHERE id = ? ";
+    const SQL = "UPDATE usuarios2 SET nome = ?, sobrenome = ?, email = ?, estado = ?, cidade = ?, telefone = ?, nicho = ? WHERE id_usuario = " + id_usuario;
 
-    await db.query(SQL,[nome, sobrenome, email, estado, cidade, telefone, nicho, id], (err, result) => {
+    await db.query(SQL,[nome, sobrenome, email, estado, cidade, telefone, nicho, id_usuario], (err, result) => {
         
-        if(err) res.status(500).send("usuario não localizado");
+        if(err) res.status(500).send("usuário não localizado");
         
         res.send(result);
     });
 });
 
-app.delete("/delete/:id", async (req, res) => {
-    const {id} = req.params;
-    let SQL = "DELETE FROM usuarios2 WHERE id = ?";
-    await db.query(SQL, id, (err, result) => {
+app.delete("/delete/:id_usuario", async (req, res) => {
+    const {id_usuario} = req.params;
+    const SQL = "DELETE FROM usuarios2 WHERE id_usuario = ?";
+    await db.query(SQL, id_usuario, (err, result) => {
         
-        if(err) res.status(500).send("usuario não localizado");
+        if(err) res.status(500).send("usuário não localizado");
         
         res.send(result);
     });
