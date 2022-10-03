@@ -7,7 +7,7 @@ const db = require("./database/configDatabase");
 app.use(cors());
 app.use(express.json());
 
-app.post('/register', async (req, res)=>{
+app.post('/register', async (req, res) => {
     const {nome, sobrenome, email, estado, cidade, telefone, nicho} = req.body;
 
     const SQL = "INSERT INTO usuarios2 (nome, sobrenome, email, estado, cidade, telefone, nicho) VALUES (?,?,?,?,?,?,?)";
