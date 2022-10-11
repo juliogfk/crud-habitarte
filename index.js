@@ -1,11 +1,15 @@
 const express = require("express");
 const app = express();
 const cors = require('cors');
+//rota usuarioSenha
+const rotaUsuarioSenha = require('./users/usuarioSenha');
 
 const db = require("./database/configDatabase");
 
 app.use(cors());
 app.use(express.json());
+// app para rota usuarioSenha
+app.use('/usuarioSenha', rotaUsuarioSenha);
 
 app.post('/register', async (req, res) => {
     const {nome, sobrenome, email, estado, cidade, telefone, nicho} = req.body;
