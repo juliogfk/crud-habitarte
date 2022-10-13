@@ -1,8 +1,6 @@
 const express = require("express");
 const app = express();
 const cors = require('cors');
-//rota usuarioSenha
-const rotaUsuarioSenha = require('./users/usuarioSenha');
 
 const db = require("./database/configDatabase");
 
@@ -10,10 +8,10 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/register', (req, res) => {
-    const {nome, sobrenome, email, estado, cidade, telefone, nicho} = req.body;
-    const SQL = "INSERT INTO usuarios2 (nome, sobrenome, email, estado, cidade, telefone, nicho) VALUES (?,?,?,?,?,?,?)";
+    const {nome, sobrenome, email, estado, cidade, telefone, nicho, senha, username, tipoUsuario} = req.body;
+    const SQL = "INSERT INTO usuarios2 (nome, sobrenome, email, estado, cidade, telefone, nicho, senha, username, tipoUsuario) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
-    db.query(SQL, [nome, sobrenome, email, estado, cidade, telefone, nicho], (err, result) => {
+    db.query(SQL, [nome, sobrenome, email, estado, cidade, telefone, nicho, senha, username, tipoUsuario], (err, result) => {
         if(err) return res.status(500).send(err)
 
         return res.status(200).send("usuário adicionado com sucesso")
